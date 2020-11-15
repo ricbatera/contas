@@ -1,0 +1,53 @@
+<h2 class="p-text-light p-mb-3">Cadastrar nova conta a pagar</h2>
+
+<div class="p-grid p-fluid">
+   
+    <div class="p-col-12 p-md-4">
+        <div class="p-field">
+            <label for="descricao">Descrição da Saída</label>
+            <input id="descricao" type="username" aria-describedby="username1-help" pInputText />
+        </div>
+    </div>
+    <div class="p-col-12 p-md-2">
+        <div class="p-field">
+            <label for="dataCompra">Data da compra</label>
+            <p-calendar id="dataCompra" [showIcon]="true" inputId="icon" [locale]="ptBr"></p-calendar>
+        </div>
+    </div>
+    <div class="p-col-12 p-md-3">
+        <div class="p-field">
+            <label>Meio de Pagamento</label>
+            <p-dropdown [options]="meioPagto" [(ngModel)]="meioSelecionado" optionLabel="nome"></p-dropdown>
+        </div>
+    </div>
+
+    <div class="p-col-12 p-md-3">
+        <div class="p-field">
+            <label>Responsável</label>
+            <p-dropdown [options]="responsaveis" [(ngModel)]="responsavel" optionLabel="nome"></p-dropdown>
+        </div>
+    </div>
+    
+</div>
+<div class="p-grid p-fluid">
+    <div class="p-col-12 p-md-1 p-mt-5">
+        <p-checkbox name="groupname" value="Parcelado" label="Parcelado?"></p-checkbox>
+    </div>
+
+    <div class="p-col-12 p-md-1">
+        <div class="p-field">
+            <label for="parcelas">Parcelas</label>
+            <input id="parcelas" type="username" aria-describedby="username1-help" pInputText />
+        </div>
+    </div>
+    <div class="p-col-12 p-md-2">
+        <div class="p-field">
+            <label for="parcelas">Valor por Parcela</label>
+            <div class="p-inputgroup">
+                <span class="p-inputgroup-addon">R$</span>
+                <input type="text" pInputText> 
+            </div>
+
+        </div>
+    </div>
+</div>
