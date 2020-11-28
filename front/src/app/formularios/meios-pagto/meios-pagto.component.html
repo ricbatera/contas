@@ -1,0 +1,46 @@
+<h2 class="p-text-light p-mb-3">Cadastre aqui seus meios de pagamentos</h2>
+<div class="p-grid p-fluid">
+    <div class="p-col-12 p-md-4">
+        <div class="p-field">
+            <label for="descricao">Descrição</label>
+            <input [(ngModel)]="meioPagto.descricao" id="descricao" type="text" aria-describedby="descricao"
+                pInputText />
+        </div>
+    </div>
+    <div class="p-col-12 p-md-3">
+        <div class="p-field">
+            <label>Tipo</label>
+            <p-dropdown [options]="tiposMeioPgto" [(ngModel)]="tipoSelecionado" optionLabel="tipo" (onChange)="mostra($event)"></p-dropdown>
+        </div>
+    </div>
+</div>
+<!-- CAMPOS PARA CARTÃO DE CRÉDITO -->
+<div  [hidden]="mostraCamposCartao">
+    <div class="p-grid p-fluid">
+        <div class="p-col-12 p-md-4">
+            <div class="p-field">
+                <label for="descricao">Titular do cartão</label>
+                <input [(ngModel)]="cartao.nomeCartao" id="nomeCartao" type="text" aria-describedby="nomeCartao"
+                    pInputText />
+            </div>
+        </div>
+        <div class="p-col-12 p-md-3">
+            <div class="p-field">
+                <label for="descricao">Número do Cartão</label>
+                <p-inputMask [(ngModel)]="cartao.numeroCartao" mask="9999 9999 9999 9999"></p-inputMask>
+            </div>
+        </div>
+        <div class="p-col-12 p-md-3">
+            <div class="p-field">
+                <label for="validade">Validade</label>
+                <p-calendar [(ngModel)]="cartao.validade"
+                    view="month" dateFormat="mm/yy"
+                    [yearNavigator]="true"
+                    yearRange="2019:2040"
+                    [locale]="dataPtBR">
+                </p-calendar>
+            </div>
+        </div>
+    
+    </div>
+</div>

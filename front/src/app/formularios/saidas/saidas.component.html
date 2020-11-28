@@ -5,13 +5,13 @@
     <div class="p-col-12 p-md-4">
         <div class="p-field">
             <label for="descricao">Descrição da Saída</label>
-            <input id="descricao" type="username" aria-describedby="username1-help" pInputText />
+            <input [(ngModel)]="saida.descricao" id="descricao" type="username" aria-describedby="username1-help" pInputText />
         </div>
     </div>
     <div class="p-col-12 p-md-2">
         <div class="p-field">
             <label for="dataCompra">Data da compra</label>
-            <p-calendar id="dataCompra" [showIcon]="true" inputId="icon" [locale]="ptBr"></p-calendar>
+            <p-calendar [(ngModel)]="saida.dataCompra" id="dataCompra" dateFormat="dd/mm/yy" [showIcon]="true" inputId="icon" [locale]="ptBr"></p-calendar>
         </div>
     </div>
     <div class="p-col-12 p-md-3">
@@ -31,23 +31,46 @@
 </div>
 <div class="p-grid p-fluid">
     <div class="p-col-12 p-md-1 p-mt-5">
-        <p-checkbox name="groupname" value="Parcelado" label="Parcelado?"></p-checkbox>
+        <div class="p-field-checkbox">
+            <!-- <p-checkbox name="groupname" value="Parcelado" label="Parcelado?"></p-checkbox> -->
+            <p-checkbox [(ngModel)]="parcelado" binary="true" name="groupname"></p-checkbox>
+            <label for="binary">Parcelado</label>
+            
+        </div>
     </div>
-
+    
     <div class="p-col-12 p-md-1">
         <div class="p-field">
             <label for="parcelas">Parcelas</label>
-            <input id="parcelas" type="username" aria-describedby="username1-help" pInputText />
+            <input [(ngModel)]="saida.qtdeParcelas" id="parcelas" type="number" aria-describedby="numero-parcelas" pInputText [disabled]="!parcelado" value=1/>
         </div>
     </div>
     <div class="p-col-12 p-md-2">
         <div class="p-field">
-            <label for="parcelas">Valor por Parcela</label>
-            <div class="p-inputgroup">
-                <span class="p-inputgroup-addon">R$</span>
-                <input type="text" pInputText> 
-            </div>
-
+            <label for="parcelas">{{parcelado? "Valor por Parcela R$": "Valor da Compra R$"}}</label>
+            <p-inputNumber [(ngModel)]="parcela.valorUnit" mode="currency" currency="BRL" locale="pt-BR" (onBlur)="calculaTotal()"></p-inputNumber>
         </div>
     </div>
+    <div class="p-col-12 p-md-2">
+        <div class="p-field">
+            <label for="total">Valor Total</label>
+            <p-inputNumber [(ngModel)]="saida.valorTotal" mode="currency" currency="BRL" locale="pt-BR" disabled="true"></p-inputNumber>
+        </div>
+    </div>
+</div>
+<div class="p-grid p-fluid">
+    <div class="p-col-12">
+        <div class="p-field-checkbox">
+            <!-- <p-checkbox name="groupname" value="Parcelado" label="Parcelado?"></p-checkbox> -->
+            <p-checkbox [(ngModel)]="pago" binary="true" name="solo"></p-checkbox>
+            <label for="binary">Marcar como pago</label>
+            
+        </div>
+    </div>
+</div>
+<div class="p-grid p-fluid">
+    <p-button label="Cadastrar" icon="pi pi-check" (onClick)="salva()"></p-button>
+    <p-button label="Cancelar" icon="pi pi-times-circle" styleClass="p-button-danger p-ml-1"></p-button>
+    
+    
 </div>

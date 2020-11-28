@@ -10,10 +10,19 @@ import {InputTextModule} from 'primeng/inputtext';
 import {CalendarModule} from 'primeng/calendar';
 import {CheckboxModule} from 'primeng/checkbox';
 import {DropdownModule} from 'primeng/dropdown';
+import {InputNumberModule} from 'primeng/inputnumber';
+import {InputMaskModule} from 'primeng/inputmask';
+import { ResponsaveisComponent } from './responsaveis/responsaveis/responsaveis.component';
+import { MeiosPagtoComponent } from './meios-pagto/meios-pagto.component';
+import { TesteComponent } from './teste/teste.component';
+
 
 @NgModule({
   declarations: [
-    SaidasComponent
+    SaidasComponent,
+    ResponsaveisComponent,
+    MeiosPagtoComponent,
+    TesteComponent
   ],
   imports: [
     CommonModule,
@@ -24,7 +33,9 @@ import {DropdownModule} from 'primeng/dropdown';
     InputTextModule,
     CalendarModule,
     CheckboxModule,
-    DropdownModule,   
+    DropdownModule,
+    InputNumberModule,
+    InputMaskModule 
   ],
   exports:[
     SaidasComponent

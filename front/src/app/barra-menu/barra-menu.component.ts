@@ -21,7 +21,13 @@ export class BarraMenuComponent implements OnInit {
     this.itemsMenuSair = [
       {
         label: 'Editar meus dados',
-        icon: 'pi pi-sliders-v'
+        icon: 'pi pi-align-left'
+        
+      },
+      {
+        label: 'Configurações',
+        icon: 'pi pi-sliders-v',
+        url: "/meiosPagto"
       },
       {
         label: 'Sair',
