@@ -1,7 +1,8 @@
 package br.com.contas.model;
 
-import java.util.Date;
+import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,11 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
 
 @Entity
 @Data
-public class MeioPagamento {
+public class MeioPagamento implements Serializable {	
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +25,16 @@ public class MeioPagamento {
 	
 	private String descricao;
 	
-	@ManyToOne
-	@JoinColumn(name = "cartao_credito_id", nullable = true)
+	private String tipo;
+	
+	@JsonBackReference
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name= "cartao_credito_id")
 	private CartaoCredito cartao;
 	
-	@ManyToOne
-	@JoinColumn(name = "conta_bancaria_id", nullable = true)
+	@JsonBackReference
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "conta_bancaria_id")
 	private ContaBancaria conta;
 
 }

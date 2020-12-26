@@ -1,4 +1,5 @@
 export interface Meiopagto{
     id:number,
-    descricao:string
+    descricao:string,
+    tipo: string
 }
