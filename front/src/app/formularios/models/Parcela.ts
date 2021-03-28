@@ -3,4 +3,5 @@ export interface Parcela{
     valorUnit: number,
     parcelaNumero: number,
     situacao: string
+    dataVencimento: Date
 }

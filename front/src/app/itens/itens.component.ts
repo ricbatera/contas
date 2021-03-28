@@ -1,5 +1,6 @@
 import { MenuItem } from 'primeng/api';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-itens',
@@ -8,13 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ItensComponent implements OnInit {
   items: MenuItem[];
-  constructor() { }
+  constructor( ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {   
+
     this.items = [
       {
         label:"Dashboard",
-        icon:"pi pi-fw pi-chart-bar"
+        icon:"pi pi-fw pi-chart-bar",
+        url: "/dashboard"
       },
       {
           label:'Novo',
@@ -27,7 +30,8 @@ export class ItensComponent implements OnInit {
               },
               {
                   label:'Entrada',
-                  icon:'pi pi-fw pi-plus'
+                  icon:'pi pi-fw pi-plus',
+                  url:"/entrada"
               },
               {
                   separator:true

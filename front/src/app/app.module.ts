@@ -8,11 +8,18 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BarraMenuModule } from './barra-menu/barra-menu.module';
 import { ItensModule } from './itens/itens.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import {ButtonModule} from 'primeng/button';
+import {CardModule} from 'primeng/card';
+import {DialogModule} from 'primeng/dialog';
+import {DropdownModule} from 'primeng/dropdown';
+
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    DashboardComponent
     
   ],
   imports: [
@@ -22,7 +29,11 @@ import { ItensModule } from './itens/itens.module';
     BarraMenuModule,
     ItensModule,
     FormulariosModule,
-    HttpClientModule
+    HttpClientModule,
+    ButtonModule,
+    CardModule,
+    DialogModule,
+    DropdownModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

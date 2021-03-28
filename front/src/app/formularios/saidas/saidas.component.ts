@@ -1,15 +1,14 @@
+import { DatabaseServiceService } from './../../services/database-service.service';
+import { RecursoEntradaSaida } from './../models/RecursoEntradaSaida';
+import { SaidasService } from './../services/saidas.service';
+import { Meiopagto } from './../models/MeioPagto';
+import { ValidacoesService } from './../services/validacoes.service';
+import { MeiosPagtoService } from './../services/meios-pagto.service';
 import { ConfiguracoesPtBrService } from './../services/configuracoes-pt-br.service';
 import { Responsavel } from './../models/Responsavel';
-import { Parcela } from './../models/Parcela';
 import { Saida } from './../models/Saida';
 import { Component, OnInit } from '@angular/core';
-import { SelectItem } from 'primeng/api';
 import { ResponsaveisService } from '../services/responsaveis.service';
-
-
-interface Pagto {
-  nome: string;
-}
 
 
 @Component({
@@ -25,70 +24,117 @@ export class SaidasComponent implements OnInit {
     descricao: null,
     dataCompra: null,
     parcelada: null,
-    qtdeParcelas: null,
-    valorTotal: null
+    qtdeParcelas: 1,
+    valorTotal: null,
+    dataVencimento:null,
+    responsavel: null,
+    parcela: null,
+    recursoEntradaSaida:null,
+    situacao:null
   };
 
-  parcela: Parcela = {
-    id: null,
-    valorUnit: null,
-    parcelaNumero: null,
-    situacao: "Aberto"
-  }
+  valorUnitario: number;
+  dataVencimento: any;
+  dataVencimento2: any;
+  dataCompra: any;
   value: Date;
   ptBr: any;
-  meioSelecionado: SelectItem;
-  meioPagto: Pagto[];
   responsaveis: Responsavel[];
-  responsavel: SelectItem;
+  meiospagtos: Meiopagto[];
   parcelado: boolean;
-  pago: boolean
+  pago: boolean;
+  desabilitaVencimento = true;
+  listaVencimentosCartoes = new Array();
+  diaVencimento: number = 1;
+  recursosEntradaSaidaList: RecursoEntradaSaida[];
 
-
-  teste: string
   constructor(
     private service: ResponsaveisService,
-    private ptBR: ConfiguracoesPtBrService
-    ) {
-    // esses dados virão do banco de dados
-    this.meioPagto = [
-      { nome: 'Itaú Uniclass' },
-      { nome: 'Extra Card' },
-      { nome: 'Boleto' },
-      { nome: 'Débito em conta' }
-    ]    
-  }
+    private ptBR: ConfiguracoesPtBrService,
+    private meiospagtoService: MeiosPagtoService,
+    private validacoes: ValidacoesService,
+    private saidaService: SaidasService,
+    private databaseServiceService: DatabaseServiceService
+  ) { }
 
   ngOnInit(): void {
     this.ptBr = this.ptBR.ptBr;
 
     this.buscarTodosResponsaveis();
+    this.carregaTodosRecursosEntradaSaida()
   }
 
   salva() {
     if (this.pago) {
-      this.parcela.situacao = "Pago"
+      this.saida.situacao = "Pago"
     } else {
-      this.parcela.situacao = "Aberto"
+      this.saida.situacao = "Aberto"
     }
-    console.log(this.saida);
-    console.log()
-    console.log(this.parcela)
+    if(!this.desabilitaVencimento){
+      this.dataVencimento = this.validacoes.converteDatas3(this.dataVencimento2);
+    }else{
+      console.log("caiu no else");
+      this.dataVencimento = this.validacoes.converteDatas2(this.dataVencimento2);
+    }
+    const payload = {
+      descricao: this.saida.descricao,
+      dataCompra: this.validacoes.converteDatas3(this.saida.dataCompra),
+      parcelada: this.saida.parcelada,
+      valorTotal: this.saida.valorTotal,
+      dataVencimento: this.dataVencimento,
+      numParcelas: this.saida.qtdeParcelas,
+      situacao: this.saida.situacao,
+      responsavel: {id: this.saida.responsavel.id},
+      recursoEntradaSaida: {id: this.saida.recursoEntradaSaida.id}
+    }
+    //console.log(payload);
+    
+    
+    this.databaseServiceService.salvarSaida(payload)
+    .subscribe(
+      response => {
+        console.log(response);            
+      },
+      error => {
+        console.log(error);
+      });
   }
   calculaTotal() {
-    this.saida.valorTotal = this.parcela.valorUnit * this.saida.qtdeParcelas;
+    this.saida.valorTotal = this.valorUnitario * this.saida.qtdeParcelas;
   }
 
-  buscarTodosResponsaveis(){
+  buscarTodosResponsaveis() {
     this.service.listar()
-        .subscribe(
-          response => {            
-            this.responsaveis = response;           
-          },
-          error => {
-            console.log(error);
-            alert(error.error);
-          });
+      .subscribe(
+        response => {
+          this.responsaveis = response;
+        },
+        error => {
+          console.log(error);
+        });
   }
 
+
+  mostraVencimento(event) {
+    let diaVenc = this.saida.recursoEntradaSaida.diaVencimento;
+    if(diaVenc !=0){
+      this.dataVencimento2 = this.validacoes.montaDataVencimento(diaVenc);
+      this.desabilitaVencimento = true;
+    }else{
+      this.dataVencimento2 = null;
+      this.desabilitaVencimento = false;
+    }
+
+  }
+  carregaTodosRecursosEntradaSaida(){
+    this.databaseServiceService.listarRecursosEntradasSaidas()
+    .subscribe(
+      response => {
+        this.recursosEntradaSaidaList = response
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
 }

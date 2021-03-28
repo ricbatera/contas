@@ -15,6 +15,12 @@ import {InputMaskModule} from 'primeng/inputmask';
 import { ResponsaveisComponent } from './responsaveis/responsaveis/responsaveis.component';
 import { MeiosPagtoComponent } from './meios-pagto/meios-pagto.component';
 import { TesteComponent } from './teste/teste.component';
+import { EntradasComponent } from './entradas/entradas.component';
+import {ToggleButtonModule} from 'primeng/togglebutton';
+import { ListagemSaidasComponent } from './listagem-saidas/listagem-saidas.component';
+import {TableModule} from 'primeng/table';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {ToastModule} from 'primeng/toast';
 
 
 @NgModule({
@@ -22,7 +28,9 @@ import { TesteComponent } from './teste/teste.component';
     SaidasComponent,
     ResponsaveisComponent,
     MeiosPagtoComponent,
-    TesteComponent
+    TesteComponent,
+    EntradasComponent,
+    ListagemSaidasComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +43,11 @@ import { TesteComponent } from './teste/teste.component';
     CheckboxModule,
     DropdownModule,
     InputNumberModule,
-    InputMaskModule 
+    InputMaskModule,
+    ToggleButtonModule,
+    TableModule,
+    FontAwesomeModule,
+    ToastModule
   ],
   exports:[
     SaidasComponent

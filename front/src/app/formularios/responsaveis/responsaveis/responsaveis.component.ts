@@ -23,7 +23,8 @@ export class ResponsaveisComponent implements OnInit {
   ngOnInit(): void {    
   }
 
-  salva(){    
+  salva(){  
+    console.log(this.responsavel)  
     this.service.salvar(this.responsavel)
         .subscribe(
           response => {

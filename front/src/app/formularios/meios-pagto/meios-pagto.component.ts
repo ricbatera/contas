@@ -1,12 +1,16 @@
+import { TipoEntradaSaida } from './../models/TipoEntradaSaida';
+import { DatabaseServiceService } from './../../services/database-service.service';
+import { Component, OnInit } from '@angular/core';
+import { ResponsaveisService } from './../services/responsaveis.service';
 import { ValidacoesService } from './../services/validacoes.service';
 import { ConfiguracoesPtBrService } from './../services/configuracoes-pt-br.service';
 import { CartaoCredito } from './../models/CartaoCredito';
 import { TiposMeiosPagtoService } from '../services/tipos-meios-pagto.service';
+import { MeiosPagtoService } from './../services/meios-pagto.service';
 import { SelectItem } from 'primeng/api';
 import { TiposMeiospagto } from './../models/TiposMeiosPagto';
 import { ContaBancaria } from './../models/ContaBancaria';
 import { Meiopagto } from './../models/MeioPagto';
-import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-meios-pagto',
@@ -18,6 +22,9 @@ export class MeiosPagtoComponent implements OnInit {
   tiposMeioPgto: TiposMeiospagto[];
   tipoSelecionado: SelectItem;
   tipoSelec: string = "Escolha um tipo...";
+  tiposEntradaSaidaList: TipoEntradaSaida[];
+  tipoEntradaSaidaSelecionado:TipoEntradaSaida;
+  descricao: string = null;
 
   meioPagto: Meiopagto = {
     id: null,
@@ -25,14 +32,13 @@ export class MeiosPagtoComponent implements OnInit {
     tipo: null
   }
   cartao: CartaoCredito = {
-    id: null,
     nomeCartao: null,
     numeroCartao: null,
     validade: null,
+    diaVencimento: null
   }
 
   contaBancaria: ContaBancaria = {
-    id: null,
     agencia: null,
     conta: null,
     banco: null
@@ -45,39 +51,45 @@ export class MeiosPagtoComponent implements OnInit {
   constructor(
     private tiposService: TiposMeiosPagtoService,
     private validacaoService: ValidacoesService,
+    private meioPagtoService: MeiosPagtoService,
+    private responsavelService: ResponsaveisService,
+    private databaseService: DatabaseServiceService,
     private ptBR: ConfiguracoesPtBrService) { }
 
   ngOnInit(): void {
     this.tiposMeioPgto = this.tiposService.tiposMeiosPagto;
-    this.dataPtBR = this.ptBR.ptBr
+    this.dataPtBR = this.ptBR.ptBr;
+    this.buscarTiposentradasSaidas();
+  }
+
+  buscarTiposentradasSaidas(){
+    this.databaseService.listarTiposEntradasSaidas()
+    .subscribe(
+      response => {
+        this.tiposEntradaSaidaList = response;
+      },
+      error => {
+        console.log(error);
+        alert(error.error);
+      });
   }
 
   mostra(ev) {
-    switch (ev.value.tipo) {
+    this.tipoEntradaSaidaSelecionado = ev.value;
+    switch (this.tipoEntradaSaidaSelecionado.nome) {
       case "Cartão de Crédito":
-        this.tipoSelec = ev.value.tipo;
+        //this.tipoSelec = ev.value.tipo;
         this.mostraCamposCartao = false;
         this.mostraCamposConta = true;
         break;
-      case "Débito em Conta":
-        this.tipoSelec = ev.value.tipo;
+      case "Conta Bancária":
+       // this.tipoSelec = ev.value.tipo;
         this.mostraCamposConta = false;
         this.mostraCamposCartao = true;
-        break;
-      case "Cheque":
-        this.tipoSelec = "Cheque";
-        this.mostraCamposConta = false;
-        this.mostraCamposCartao = true;
-        break;
-
-      case "Boleto Bancário":
-        this.tipoSelec = "Boleto Bancário";
-        this.mostraCamposCartao = true;
-        this.mostraCamposConta = true;
         break;
 
       case "Dinheiro":
-        this.tipoSelec = "Dinheiro";
+        //this.tipoSelec = "Dinheiro";
         this.mostraCamposCartao = true;
         this.mostraCamposConta = true;
         break;
@@ -94,24 +106,29 @@ export class MeiosPagtoComponent implements OnInit {
     if(!this.mostraCamposCartao){
       dataValidade = this.validacaoService.converteDatas(this.cartao.validade);
     }
-    const validaDescricaoETipo = this.validacaoService.validarDescricao(this.meioPagto.descricao, this.tipoSelec);
+    const validaDescricaoETipo = this.validacaoService.validarDescricao(this.descricao, this.tipoEntradaSaidaSelecionado.nome);
     if (validaDescricaoETipo) {
 
       const payload = {
-        descricao: this.meioPagto.descricao,
-        tipo: this.tipoSelec,
-        cartao: {
-          nomeCartao: this.cartao.nomeCartao,
-          numeroCartao: this.cartao.numeroCartao,
-          validade: dataValidade
-        },
-        conta: {
-          banco: this.contaBancaria.banco,
-          conta: this.contaBancaria.conta,
-          agencia: this.contaBancaria.agencia
-        }
+        descricao: this.descricao,
+        nomeCartao: this.cartao.nomeCartao,
+        numeroCartao: this.cartao.numeroCartao,
+        validade: dataValidade,
+        diaVencimento: this.cartao.diaVencimento,
+        banco: this.contaBancaria.banco,
+        conta: this.contaBancaria.conta,
+        agencia: this.contaBancaria.agencia,
+        entradaSaida:this.tipoEntradaSaidaSelecionado
       }
-      console.log(payload);
+      this.databaseService.salvar(payload)
+      .subscribe(
+        response => {
+          console.log("Pegar a resposta aqui. Quando salva um novo meio de pagamento");            
+        },
+        error => {
+          console.log(error);
+        });
+      
     } else {
 
     }

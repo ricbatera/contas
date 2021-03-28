@@ -2,6 +2,8 @@ package br.com.contas.model;
 
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +16,13 @@ import javax.persistence.OneToMany;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+//@Data
+@Getter
+@Setter
 public class ContaBancaria implements Serializable {	
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +34,15 @@ public class ContaBancaria implements Serializable {
 	private String conta;
 	private String banco;
 	
+	//@JsonBackReference
 	@JsonManagedReference
 	@OneToMany(mappedBy = "conta")
 	private List<MeioPagamento> meios = new ArrayList<>();
+
+	@Override
+	public String toString() {
+		return "ContaBancaria [id=" + id + ", agencia=" + agencia + ", conta=" + conta + ", banco=" + banco + "]";
+	}
+	
+	
 }
